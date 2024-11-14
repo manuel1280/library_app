@@ -6,7 +6,7 @@ class CreateBorrowings < ActiveRecord::Migration[7.1]
       t.datetime :borrowed_at
       t.datetime :returned_at
       t.integer :approved_by_id
-      t.datetime :due_to
+      t.datetime :due_date
 
       t.timestamps
     end

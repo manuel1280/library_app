@@ -18,7 +18,7 @@ end
 puts " ********* users created **********"
 
 puts " ********* creating books **********"
-20.times do
+50.times do
 	Book.create(title: Faker::Book.title, author: Faker::Book.author, genre: Faker::Book.genre, isbn: Faker::Code.isbn, total_copies: rand(1..100))
 end
 puts " ********* books created **********"
@@ -26,8 +26,13 @@ puts " ********* books created **********"
 puts " ********* creating borrowings **********"
 20.times do
 	member_ids = User.where(role: :member).ids
-	book_ids = Book.ids
+	book_ids = Book.available.ids
 	librarian_id = User.find_by(role: :librarian).id
-	Borrowing.create(user_id: member_ids.sample, book_id: book_ids.sample, approved_by_id: librarian_id)
+	Borrowing.create(user_id: member_ids.sample, book_id: book_ids.sample, approved_by_id: librarian_id, borrowed_at: rand(3..30).days.ago, returned_at: nil)
+end
+
+Borrowing.first(10).each do |b|
+	returned_at = ((b.borrowed_at.to_date + 1.day)..Date.today).to_a.sample
+	b.update!(returned_at: returned_at)
 end
 puts " ********* borrowings created **********"

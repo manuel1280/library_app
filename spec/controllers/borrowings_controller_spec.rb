@@ -5,20 +5,20 @@ RSpec.describe BorrowingsController do
 
   before do
     5.times do
-      Book.create(title: Faker::Book.title, author: Faker::Book.author, genre: Faker::Book.genre, isbn: Faker::Code.isbn, total_copies: rand(1..100))
+      Book.create!(title: Faker::Book.title, author: Faker::Book.author, genre: Faker::Book.genre, isbn: Faker::Code.isbn, total_copies: rand(1..100))
     end
 
     3.times do
-      User.create(name: Faker::Name.name, email: Faker::Internet.email, password: "password", role: :member)
+      User.create!(name: Faker::Name.name, email: Faker::Internet.email, password: "password", role: :member)
     end
 
     5.times do
-      Borrowing.create(
-        book_id: Book.ids.sample,
+      Borrowing.create!(
+        book_id: Book.available.ids.sample,
         user_id: User.where(role: :member).ids.sample,
         approved_by_id: user.id,
-        borrowed_at: Time.now,
-        returned_at: DateTime.now + rand(1..30).days
+        borrowed_at: 3.days.ago,
+        returned_at: Date.yesterday
       )
     end
   end
@@ -55,9 +55,11 @@ RSpec.describe BorrowingsController do
     end
 
     describe  "post #update" do
+      let(:borrowing) { Borrowing.create!(book_id: Book.available.ids.sample, user_id: User.where(role: :member).ids.sample, approved_by_id: user.id, borrowed_at: 7.days.ago, returned_at: nil) }
+
       it "returns http success" do
-        put :update, params: { id: borrowing.id, borrowing: { returned_at: '2025-01-01' } }, format: :json
-        expect(Borrowing.find_by(id: borrowing.id).returned_at).to eq('2025-01-01')
+        put :update, params: { id: borrowing.id, borrowing: { returned_at: Date.today } }, format: :json
+        expect(Borrowing.find_by(id: borrowing.id).returned_at.to_date).to eq(Date.today)
         expect(response).to have_http_status(:success)
       end
     end

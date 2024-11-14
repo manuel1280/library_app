@@ -7,7 +7,7 @@ class DashboardsController < ApplicationController
   end
 
   def member_borrowings
-    @borrowings = User.find(params[:id]).summary_report
+    @borrowings = User.find(params[:id]).member_borrowings_report
     render json: @borrowings
 
     rescue ActiveRecord::RecordNotFound

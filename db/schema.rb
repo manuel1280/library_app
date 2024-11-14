@@ -14,7 +14,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_13_191457) do
   create_table "books", force: :cascade do |t|
     t.string "title"
     t.string "author"
-    t.integer "genre"
+    t.string "genre"
     t.string "isbn"
     t.integer "total_copies"
     t.datetime "created_at", null: false
@@ -27,7 +27,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_13_191457) do
     t.datetime "borrowed_at"
     t.datetime "returned_at"
     t.integer "approved_by_id"
-    t.datetime "due_to"
+    t.datetime "due_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["book_id"], name: "index_borrowings_on_book_id"

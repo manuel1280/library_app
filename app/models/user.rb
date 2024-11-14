@@ -36,11 +36,20 @@ class User < ActiveRecord::Base
 
   has_many :borrowings
 
+  validates :name, presence: true
+  validates :email, presence: true
+  validates :role, presence: true
+
   before_save -> { skip_confirmation! }
 
-  def summary_report
+  def member_borrowings_report
     OpenStruct.new(
-      borrowed_books: borrowings.map{|b| [ b.book.id, b.due_date, b.overdue? ]},
+      borrowed_books: borrowings.map do |b|
+        {
+          due_date: b.due_date,
+          overdue: b.overdue?
+        }
+      end
     )
   end
 end
