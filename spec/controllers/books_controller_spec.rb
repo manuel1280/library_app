@@ -15,10 +15,28 @@ RSpec.describe BooksController do
 
   context 'when user is signed in' do
     describe "GET #index" do
-      it "returns http success" do
-        get :index
+      before do
+        Book.create(title: 'Wonders of life', author: 'Michale Hart', genre: 'Fantasy', isbn: Faker::Code.isbn, total_copies: rand(1..100))
 
-        success_response_expected
+        3.times do
+          Book.create(title: Faker::Book.title, author: 'Michale Hart', genre: 'Fantasy', isbn: Faker::Code.isbn, total_copies: rand(1..100))
+        end
+      end
+
+      it "returns all books" do
+        get :index, params: { book: { author: '', title: '', genre: '' } }
+
+        body_response = JSON.parse(response.body)['data']
+        expect(body_response.length).to eq(9)
+      end
+
+      it "returns filtered books" do
+        get :index, params: { book: { author: 'hart', title: 'wonders', genre: 'fantasy' } }
+
+        body_response = JSON.parse(response.body)['data']
+        expect(body_response.length).to eq(1)
+        expect(body_response.first['title']).to eq('Wonders of life')
+        expect(body_response.first['author']).to eq('Michale Hart')
       end
     end
     describe "post #create" do
