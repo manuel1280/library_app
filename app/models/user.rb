@@ -23,7 +23,7 @@
 #  tokens                 :text
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  type                   :integer
+#  role                   :integer
 #
 class User < ActiveRecord::Base
   extend Devise::Models
@@ -34,5 +34,13 @@ class User < ActiveRecord::Base
 
   enum role: { librarian: 0,  member: 1, super_admin: 2 }
 
+  has_many :borrowings
+
   before_save -> { skip_confirmation! }
+
+  def summary_report
+    OpenStruct.new(
+      borrowed_books: borrowings.map{|b| [ b.book.id, b.due_date, b.overdue? ]},
+    )
+  end
 end

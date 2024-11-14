@@ -14,7 +14,8 @@ Rails.application.routes.draw do
   resources :borrowings
   resources :dashboards do
     collection do
-      get :borrowings
+      get :admin_borrowings
+      get :member_borrowings
     end
   end
 end

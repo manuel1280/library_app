@@ -45,8 +45,4 @@ class BooksController < ApplicationController
   def book_params
     params.require(:book).permit(:title, :author, :genre, :isbn, :total_copies)
   end
-
-  def render_not_found
-    render json: { error: "Book not found" }, status: :not_found
-  end
 end
