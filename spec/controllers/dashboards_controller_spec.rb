@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Dashboards", type: :request do
+RSpec.describe DashboardsController do
   describe "GET /borrowings" do
     it "returns http success" do
       get "/dashboards/borrowings"

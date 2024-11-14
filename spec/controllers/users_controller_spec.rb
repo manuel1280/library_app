@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Users", type: :request do
+RSpec.describe UsersController do
   describe "GET /create" do
     it "returns http success" do
       get "/users/create"

@@ -32,11 +32,13 @@ end
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.include Devise::Test::ControllerHelpers, type: :controller
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
+  config.render_views = true
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
@@ -60,4 +62,25 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  def set_auth_headers(auth_headers)
+    request.headers['Uid'] = auth_headers['uid']
+    request.headers['Access-Token'] = auth_headers['access-token']
+    request.headers['Client'] = auth_headers['client']
+  end
+
+  def login(user)
+    request.env['HTTP_ACCEPT'] = 'application/json'
+    request.env['devise.mapping'] = Devise.mappings[:user]
+
+    set_auth_headers(user.create_new_auth_token)
+  end
+
+  def sign_in_as_role(role)
+    let(:user) { User.create(name: 'John Doe', email: 'kK8r6@example.com', password: 'password', role: role) }
+
+    before do
+      login user
+    end
+  end
 end

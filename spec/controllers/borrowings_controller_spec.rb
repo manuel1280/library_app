@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Borrowings", type: :request do
+RSpec.describe BorrowingsController do
   describe "GET /create" do
     it "returns http success" do
       get "/borrowings/create"
